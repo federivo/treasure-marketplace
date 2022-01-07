@@ -58,6 +58,7 @@ import { targetNftT } from "../../../types";
 import { Tooltip } from "../../../components/Tooltip";
 import { utils } from "ethers";
 import { EthIcon, SwapIcon, UsdIcon } from "../../../components/Icons";
+import Head from "next/head";
 
 const MAX_ITEMS_PER_PAGE = 10;
 
@@ -267,6 +268,11 @@ export default function Example() {
         )}
         {data?.collection && tokenInfo && (
           <>
+            <Head>
+              <title>
+                {data?.collection.name} {tokenInfo.metadata?.name}
+              </title>
+            </Head>
             <Link href={`/collection/${slugOrAddress}`} passHref>
               <a className="text-gray-600 dark:text-gray-400 dark:hover:text-gray-500 inline-flex items-center space-x-2 hover:text-gray-800">
                 <ArrowLeftIcon className="h-3 w-3" />

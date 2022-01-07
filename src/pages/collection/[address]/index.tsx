@@ -40,6 +40,7 @@ import Button from "../../../components/Button";
 import { useChainId } from "../../../lib/hooks";
 import { EthIcon, MagicIcon, SwapIcon } from "../../../components/Icons";
 import { useMagic } from "../../../context/magicContext";
+import Head from "next/head";
 
 const MAX_ITEMS_PER_PAGE = 42;
 
@@ -376,6 +377,12 @@ const Collection = () => {
 
   return (
     <main>
+      {collectionData?.collection?.name && (
+        <Head>
+          <title>{collectionData.collection.name}</title>
+        </Head>
+      )}
+
       <Transition.Root show={mobileFiltersOpen} as={Fragment}>
         <Dialog
           as="div"
