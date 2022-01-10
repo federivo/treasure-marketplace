@@ -379,7 +379,7 @@ const Collection = () => {
     <main>
       {collectionData?.collection?.name && (
         <Head>
-          <title>{collectionData.collection.name}</title>
+          <title>{collectionData.collection.name} | Treasure Marketplace</title>
         </Head>
       )}
 

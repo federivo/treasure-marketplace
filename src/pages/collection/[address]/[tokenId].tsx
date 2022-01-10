@@ -270,7 +270,8 @@ export default function Example() {
           <>
             <Head>
               <title>
-                {data?.collection.name} {tokenInfo.metadata?.name}
+                {tokenInfo.metadata?.name} - {data?.collection.name} | Treasure
+                Marketplace
               </title>
             </Head>
             <Link href={`/collection/${slugOrAddress}`} passHref>
