@@ -223,90 +223,115 @@ const Listings = ({
             role="list"
             className="mt-2 divide-y divide-gray-200 dark:divide-gray-300 overflow-hidden"
           >
-            {listings.map((listing) => (
-              <Disclosure as="li" key={listing.id}>
-                {({ open }) => (
-                  <>
-                    <div className="relative">
-                      <div className="block px-4 py-4 hover:bg-gray-50 dark:bg-gray-200">
-                        <span className="flex items-center">
-                          <span className="flex-1 flex space-x-4 truncate">
-                            <ImageWrapper
-                              aria-hidden="true"
-                              height="50%"
-                              token={listing.token}
-                              width="60%"
-                            />
-                            <span className="flex flex-col text-gray-500 space-y-1 text-sm truncate">
-                              <span className="truncate text-xs text-gray-400 uppercase">
-                                {" "}
-                                {listing.token.metadata?.description}
-                              </span>
-                              <span className="truncate text-gray-600 font-semibold">
-                                {" "}
-                                {listing.token.name}
-                              </span>
-                              <span>
-                                <span className="text-gray-900 font-medium">
-                                  {formatPrice(listing.pricePerItem)}
-                                </span>{" "}
-                                $MAGIC
+            {listings.map((listing) => {
+              const collectionName = getCollectionNameFromAddress(
+                listing?.collection?.id,
+                chainId
+              );
+              const slugOrAddress =
+                getCollectionSlugFromName(collectionName) ??
+                listing.collection.id;
+              return (
+                <Disclosure as="li" key={listing.id}>
+                  {({ open }) => (
+                    <>
+                      <div className="relative">
+                        <div className="block px-4 py-4 hover:bg-gray-50 dark:bg-gray-200">
+                          <span className="flex items-center">
+                            <span className="flex-1 flex space-x-4 truncate">
+                              <ImageWrapper
+                                aria-hidden="true"
+                                height="50%"
+                                token={listing.token}
+                                width="60%"
+                              />
+                              <span className="flex flex-col text-gray-500 space-y-1 text-sm truncate">
+                                <span className="truncate text-xs text-gray-400 uppercase">
+                                  {" "}
+                                  {listing.token.metadata?.description}
+                                </span>
+                                <span className="truncate text-gray-600 font-semibold">
+                                  {" "}
+                                  {listing.token.name}
+                                </span>
+                                <span>
+                                  <span className="text-gray-900 font-medium">
+                                    {formatPrice(listing.pricePerItem)}
+                                  </span>{" "}
+                                  $MAGIC
+                                </span>
                               </span>
                             </span>
+                            {open ? (
+                              <ChevronDownIcon
+                                className="flex-shrink-0 h-5 w-5 text-gray-400"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <ChevronRightIcon
+                                className="flex-shrink-0 h-5 w-5 text-gray-400"
+                                aria-hidden="true"
+                              />
+                            )}
                           </span>
-                          {open ? (
-                            <ChevronDownIcon
-                              className="flex-shrink-0 h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          ) : (
-                            <ChevronRightIcon
-                              className="flex-shrink-0 h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          )}
-                        </span>
-                      </div>
-                      <Disclosure.Button className="absolute inset-0 focus:outline-none w-full h-full" />
-                    </div>
-                    <Transition show={open} as={Fragment}>
-                      <Disclosure.Panel
-                        static
-                        className="block px-4 dark:bg-gray-200 text-gray-700"
-                      >
-                        <div className="pb-4 flex sm:space-y-0 space-y-2 sm:flex-row flex-col sm:divide-x-[1px] divide-gray-400 text-sm">
-                          <div className="space-y-1 sm:pr-8">
-                            <p className="text-xs dark:text-gray-500">From:</p>
-                            <p>{shortenAddress(listing.seller.id)}</p>
-                          </div>
-                          <div className="sm:px-8 space-y-1">
-                            <p className="text-xs dark:text-gray-500">To:</p>
-                            <p>{shortenAddress(listing.buyer?.id ?? "")}</p>
-                          </div>
-                          <div className="sm:pl-8 space-y-1">
-                            <p className="text-xs dark:text-gray-500">Time:</p>
-                            <a
-                              className="flex items-center"
-                              href={listing.transactionLink ?? ""}
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              {formatDistanceToNow(
-                                new Date(Number(listing.blockTimestamp) * 1000),
-                                {
-                                  addSuffix: true,
-                                }
-                              )}
-                              <ExternalLinkIcon className="h-4 m-[0.125rem] pl-1" />
-                            </a>
-                          </div>
                         </div>
-                      </Disclosure.Panel>
-                    </Transition>
-                  </>
-                )}
-              </Disclosure>
-            ))}
+                        <Disclosure.Button className="absolute inset-0 focus:outline-none w-full h-full" />
+                      </div>
+                      <Transition show={open} as={Fragment}>
+                        <Disclosure.Panel
+                          static
+                          className="block px-4 dark:bg-gray-200 text-gray-700"
+                        >
+                          <div className="pb-4 flex sm:space-y-0 space-y-2 sm:flex-row flex-col sm:divide-x-[1px] divide-gray-400 text-sm">
+                            <div className="space-y-1 sm:pr-8">
+                              <Link
+                                href={`/collection/${slugOrAddress}/${listing.token.tokenId}`}
+                                passHref
+                              >
+                                <a className="text-xs text-red-600 hover:underline">
+                                  View more
+                                </a>
+                              </Link>
+                            </div>
+                            <div className="space-y-1 sm:pr-8">
+                              <p className="text-xs dark:text-gray-500">
+                                From:
+                              </p>
+                              <p>{shortenAddress(listing.seller.id)}</p>
+                            </div>
+                            <div className="sm:px-8 space-y-1">
+                              <p className="text-xs dark:text-gray-500">To:</p>
+                              <p>{shortenAddress(listing.buyer?.id ?? "")}</p>
+                            </div>
+                            <div className="sm:pl-8 space-y-1">
+                              <p className="text-xs dark:text-gray-500">
+                                Time:
+                              </p>
+                              <a
+                                className="flex items-center"
+                                href={listing.transactionLink ?? ""}
+                                rel="noreferrer"
+                                target="_blank"
+                              >
+                                {formatDistanceToNow(
+                                  new Date(
+                                    Number(listing.blockTimestamp) * 1000
+                                  ),
+                                  {
+                                    addSuffix: true,
+                                  }
+                                )}
+                                <ExternalLinkIcon className="h-4 m-[0.125rem] pl-1" />
+                              </a>
+                            </div>
+                          </div>
+                        </Disclosure.Panel>
+                      </Transition>
+                    </>
+                  )}
+                </Disclosure>
+              );
+            })}
           </ul>
         </div>
       </main>
